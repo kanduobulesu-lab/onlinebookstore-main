@@ -38,7 +38,7 @@ jobs:
   docker-build-push:
     name: Container image
     needs: build-and-test
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       contents: read
