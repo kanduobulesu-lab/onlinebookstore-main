@@ -1,6 +1,6 @@
 name: CI/CD for OnlineBookStore
 
-'on':
+on:
   push:
     branches:
       - main
@@ -12,7 +12,7 @@ name: CI/CD for OnlineBookStore
 
 jobs:
   build-and-test:
-    name: Build and verify
+    name: Build, test, and package
     runs-on: ubuntu-latest
 
     steps:
@@ -33,12 +33,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: onlinebookstore-war
-          path: target/*.war
+          path: target/onlinebookstore-*.war
+          if-no-files-found: error
 
-  docker-build-push:
-    name: Container image
+  publish-image:
+    name: Build and publish Docker image
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     permissions:
       contents: read
